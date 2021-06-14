@@ -1,0 +1,529 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Quickstart guide &mdash; bunkerized-nginx v1.2.6 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+    <link rel="canonical" href="https://bunkerized-nginx.readthedocs.io/en/dev/quickstart_guide.html" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Security tuning" href="security_tuning.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> bunkerized-nginx
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#run-http-server-with-default-settings">Run HTTP server with default settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#in-combination-with-php">In combination with PHP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-https-server-with-automated-let-s-encrypt">Run HTTPS server with automated Let’s Encrypt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#as-a-reverse-proxy">As a reverse proxy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#behind-a-reverse-proxy">Behind a reverse proxy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multisite">Multisite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#automatic-configuration">Automatic configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#swarm-mode">Swarm mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#web-ui">Web UI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="security_tuning.html">Security tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="volumes.html">Volumes list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">List of environment variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bunkerized-nginx</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Quickstart guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/quickstart_guide.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quickstart-guide">
+<h1>Quickstart guide<a class="headerlink" href="#quickstart-guide" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="run-http-server-with-default-settings">
+<h2>Run HTTP server with default settings<a class="headerlink" href="#run-http-server-with-default-settings" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -p <span class="m">80</span>:8080 -v /path/to/web/files:/www:ro bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+<p>Web files are stored in the /www directory, the container will serve files from there. Please note that <em>bunkerized-nginx</em> doesn’t run as root but as an unprivileged user with UID/GID 101 therefore you should set the rights of <em>/path/to/web/files</em> accordingly.</p>
+</div>
+<div class="section" id="in-combination-with-php">
+<h2>In combination with PHP<a class="headerlink" href="#in-combination-with-php" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker network create mynet
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run --network mynet <span class="se">\</span>
+           -p <span class="m">80</span>:8080 <span class="se">\</span>
+           -v /path/to/web/files:/www:ro <span class="se">\</span>
+           -e <span class="nv">REMOTE_PHP</span><span class="o">=</span>myphp <span class="se">\</span>
+           -e <span class="nv">REMOTE_PHP_PATH</span><span class="o">=</span>/app <span class="se">\</span>
+           bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run --network mynet <span class="se">\</span>
+           --name myphp <span class="se">\</span>
+           -v /path/to/web/files:/app <span class="se">\</span>
+           php:fpm
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">REMOTE_PHP</span></code> environment variable lets you define the address of a remote PHP-FPM instance that will execute the .php files. <code class="docutils literal notranslate"><span class="pre">REMOTE_PHP_PATH</span></code> must be set to the directory where the PHP container will find the files.</p>
+</div>
+<div class="section" id="run-https-server-with-automated-let-s-encrypt">
+<h2>Run HTTPS server with automated Let’s Encrypt<a class="headerlink" href="#run-https-server-with-automated-let-s-encrypt" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -p <span class="m">80</span>:8080 <span class="se">\</span>
+           -p <span class="m">443</span>:8443 <span class="se">\</span>
+           -v /path/to/web/files:/www:ro <span class="se">\</span>
+           -v /where/to/save/certificates:/etc/letsencrypt <span class="se">\</span>
+           -e <span class="nv">SERVER_NAME</span><span class="o">=</span>www.yourdomain.com <span class="se">\</span>
+           -e <span class="nv">AUTO_LETS_ENCRYPT</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">REDIRECT_HTTP_TO_HTTPS</span><span class="o">=</span>yes <span class="se">\</span>
+           bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+<p>Certificates are stored in the /etc/letsencrypt directory, you should save it on your local drive. Please note that <em>bunkerized-nginx</em> doesn’t run as root but as an unprivileged user with UID/GID 101 therefore you should set the rights of <em>/where/to/save/certificates</em> accordingly.</p>
+<p>If you don’t want your webserver to listen on HTTP add the environment variable <code class="docutils literal notranslate"><span class="pre">LISTEN_HTTP</span></code> with a <em>no</em> value (e.g. HTTPS only). But Let’s Encrypt needs the port 80 to be opened so redirecting the port is mandatory.</p>
+<p>Here you have three environment variables :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SERVER_NAME</span></code> : define the FQDN of your webserver, this is mandatory for Let’s Encrypt (www.yourdomain.com should point to your IP address)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AUTO_LETS_ENCRYPT</span></code> : enable automatic Let’s Encrypt creation and renewal of certificates</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">REDIRECT_HTTP_TO_HTTPS</span></code> : enable HTTP to HTTPS redirection</p></li>
+</ul>
+</div>
+<div class="section" id="as-a-reverse-proxy">
+<h2>As a reverse proxy<a class="headerlink" href="#as-a-reverse-proxy" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -p <span class="m">80</span>:8080 <span class="se">\</span>
+           -e <span class="nv">USE_REVERSE_PROXY</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">REVERSE_PROXY_URL</span><span class="o">=</span>/ <span class="se">\</span>
+           -e <span class="nv">REVERSE_PROXY_HOST</span><span class="o">=</span>http://myserver:8080 <span class="se">\</span>
+           bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+<p>This is a simple reverse proxy to a unique application. If you have more than one application you can add more REVERSE_PROXY_URL/REVERSE_PROXY_HOST by appending a suffix number like this :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -p <span class="m">80</span>:8080 <span class="se">\</span>
+           -e <span class="nv">USE_REVERSE_PROXY</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">REVERSE_PROXY_URL_1</span><span class="o">=</span>/app1/ <span class="se">\</span>
+           -e <span class="nv">REVERSE_PROXY_HOST_1</span><span class="o">=</span>http://myapp1:3000/ <span class="se">\</span>
+           -e <span class="nv">REVERSE_PROXY_URL_2</span><span class="o">=</span>/app2/ <span class="se">\</span>
+           -e <span class="nv">REVERSE_PROXY_HOST_2</span><span class="o">=</span>http://myapp2:3000/ <span class="se">\</span>
+           bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+</div>
+<div class="section" id="behind-a-reverse-proxy">
+<h2>Behind a reverse proxy<a class="headerlink" href="#behind-a-reverse-proxy" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -p <span class="m">80</span>:8080 <span class="se">\</span>
+           -v /path/to/web/files:/www <span class="se">\</span>
+           -e <span class="nv">PROXY_REAL_IP</span><span class="o">=</span>yes <span class="se">\</span>
+           bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">PROXY_REAL_IP</span></code> environment variable, when set to <em>yes</em>, activates the <a class="reference external" href="https://nginx.org/en/docs/http/ngx_http_realip_module.html">ngx_http_realip_module</a> to get the real client IP from the reverse proxy.</p>
+<p>See <a class="reference external" href="https://bunkerized-nginx.readthedocs.io/en/latest/environment_variables.html#reverse-proxy">this section</a> if you need to tweak some values (trusted ip/network, header, …).</p>
+</div>
+<div class="section" id="multisite">
+<h2>Multisite<a class="headerlink" href="#multisite" title="Permalink to this headline">¶</a></h2>
+<p>By default, bunkerized-nginx will only create one server block. When setting the <code class="docutils literal notranslate"><span class="pre">MULTISITE</span></code> environment variable to <em>yes</em>, one server block will be created for each host defined in the <code class="docutils literal notranslate"><span class="pre">SERVER_NAME</span></code> environment variable.<br />
+You can set/override values for a specific server by prefixing the environment variable with one of the server name previously defined.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -p <span class="m">80</span>:8080 <span class="se">\</span>
+           -p <span class="m">443</span>:8443 <span class="se">\</span>
+           -v /where/to/save/certificates:/etc/letsencrypt <span class="se">\</span>
+           -e <span class="nv">SERVER_NAME</span><span class="o">=</span>app1.domain.com app2.domain.com <span class="se">\</span>
+           -e <span class="nv">MULTISITE</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">AUTO_LETS_ENCRYPT</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">REDIRECT_HTTP_TO_HTTPS</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">USE_REVERSE_PROXY</span><span class="o">=</span>yes <span class="se">\</span>
+           -e app1.domain.com_REVERSE_PROXY_URL<span class="o">=</span>/ <span class="se">\</span>
+           -e app1.domain.com_REVERSE_PROXY_HOST<span class="o">=</span>http://myapp1:8000 <span class="se">\</span>
+           -e app2.domain.com_REVERSE_PROXY_URL<span class="o">=</span>/ <span class="se">\</span>
+           -e app2.domain.com_REVERSE_PROXY_HOST<span class="o">=</span>http://myapp2:8000 <span class="se">\</span>
+           bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">USE_REVERSE_PROXY</span></code> is a <em>global</em> variable that will be applied to each server block. Whereas the <code class="docutils literal notranslate"><span class="pre">app1.domain.com_*</span></code> and <code class="docutils literal notranslate"><span class="pre">app2.domain.com_*</span></code> will only be applied to the app1.domain.com and app2.domain.com server block respectively.</p>
+<p>When serving files, the web root directory should contains subdirectories named as the servers defined in the <code class="docutils literal notranslate"><span class="pre">SERVER_NAME</span></code> environment variable. Here is an example :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -p <span class="m">80</span>:8080 <span class="se">\</span>
+           -p <span class="m">443</span>:8443 <span class="se">\</span>
+           -v /where/to/save/certificates:/etc/letsencrypt <span class="se">\</span>
+           -v /where/are/web/files:/www:ro <span class="se">\</span>
+           -e <span class="nv">SERVER_NAME</span><span class="o">=</span>app1.domain.com app2.domain.com <span class="se">\</span>
+           -e <span class="nv">MULTISITE</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">AUTO_LETS_ENCRYPT</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">REDIRECT_HTTP_TO_HTTPS</span><span class="o">=</span>yes <span class="se">\</span>
+           -e app1.domain.com_REMOTE_PHP<span class="o">=</span>php1 <span class="se">\</span>
+           -e app1.domain.com_REMOTE_PHP_PATH<span class="o">=</span>/app <span class="se">\</span>
+           -e app2.domain.com_REMOTE_PHP<span class="o">=</span>php2 <span class="se">\</span>
+           -e app2.domain.com_REMOTE_PHP_PATH<span class="o">=</span>/app <span class="se">\</span>
+           bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+<p>The <em>/where/are/web/files</em> directory should have a structure like this :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>/where/are/web/files
+├── app1.domain.com
+│   └── index.php
+│   └── ...
+└── app2.domain.com
+    └── index.php
+    └── ...
+</pre></div>
+</div>
+</div>
+<div class="section" id="automatic-configuration">
+<h2>Automatic configuration<a class="headerlink" href="#automatic-configuration" title="Permalink to this headline">¶</a></h2>
+<p>The downside of using environment variables is that you need to recreate a new container each time you want to add or remove a web service. An alternative is to use the <em>bunkerized-nginx-autoconf</em> image which listens for Docker events and “automagically” generates the configuration.</p>
+<p>First we need a volume that will store the configurations :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker volume create nginx_conf
+</pre></div>
+</div>
+<p>Then we run bunkerized-nginx with the <code class="docutils literal notranslate"><span class="pre">bunkerized-nginx.AUTOCONF</span></code> label, mount the created volume at /etc/nginx and set some default configurations for our services (e.g. : automatic Let’s Encrypt and HTTP to HTTPS redirect) :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker network create mynet
+
+docker run -p <span class="m">80</span>:8080 <span class="se">\</span>
+           -p <span class="m">443</span>:8443 <span class="se">\</span>
+           --network mynet <span class="se">\</span>
+           -v /where/to/save/certificates:/etc/letsencrypt <span class="se">\</span>
+           -v /where/are/web/files:/www:ro <span class="se">\</span>
+           -v nginx_conf:/etc/nginx <span class="se">\</span>
+           -e <span class="nv">SERVER_NAME</span><span class="o">=</span> <span class="se">\</span>
+           -e <span class="nv">MULTISITE</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">AUTO_LETS_ENCRYPT</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">REDIRECT_HTTP_TO_HTTPS</span><span class="o">=</span>yes <span class="se">\</span>
+           -l bunkerized.nginx.AUTOCONF <span class="se">\</span>
+           bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+<p>When setting <code class="docutils literal notranslate"><span class="pre">SERVER_NAME</span></code> to nothing bunkerized-nginx won’t create any server block (in case we only want automatic configuration).</p>
+<p>Once bunkerized-nginx is created, let’s setup the autoconf container :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -v /var/run/docker.sock:/var/run/docker.sock:ro <span class="se">\</span>
+           -v nginx_conf:/etc/nginx <span class="se">\</span>
+           bunkerity/bunkerized-nginx-autoconf
+</pre></div>
+</div>
+<p>We can now create a new container and use labels to dynamically configure bunkerized-nginx. Labels for automatic configuration are the same as environment variables but with the “bunkerized-nginx.” prefix.</p>
+<p>Here is a PHP example :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run --network mynet <span class="se">\</span>
+           --name myapp <span class="se">\</span>
+           -v /where/are/web/files/app.domain.com:/app <span class="se">\</span>
+           -l bunkerized-nginx.SERVER_NAME<span class="o">=</span>app.domain.com <span class="se">\</span>
+           -l bunkerized-nginx.REMOTE_PHP<span class="o">=</span>myapp <span class="se">\</span>
+           -l bunkerized-nginx.REMOTE_PHP_PATH<span class="o">=</span>/app <span class="se">\</span>
+           php:fpm
+</pre></div>
+</div>
+<p>And a reverse proxy example :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run --network mynet <span class="se">\</span>
+           --name anotherapp <span class="se">\</span>
+           -l bunkerized-nginx.SERVER_NAME<span class="o">=</span>app2.domain.com <span class="se">\</span>
+           -l bunkerized-nginx.USE_REVERSE_PROXY<span class="o">=</span>yes <span class="se">\</span>
+           -l bunkerized-nginx.REVERSE_PROXY_URL<span class="o">=</span>/ <span class="se">\</span>
+           -l bunkerized-nginx.REVERSE_PROXY_HOST<span class="o">=</span>http://anotherapp <span class="se">\</span>
+           tutum/hello-world
+</pre></div>
+</div>
+</div>
+<div class="section" id="swarm-mode">
+<h2>Swarm mode<a class="headerlink" href="#swarm-mode" title="Permalink to this headline">¶</a></h2>
+<p>Automatic configuration through labels is also supported in swarm mode. The <em>bunkerized-nginx-autoconf</em> is used to listen for Swarm events (e.g. service create/rm) and “automagically” edit configurations files and reload nginx.</p>
+<p>As a use case we will assume the following :</p>
+<ul class="simple">
+<li><p>Some managers are also workers (they will only run the <em>autoconf</em> container for obvious security reasons)</p></li>
+<li><p>The bunkerized-nginx service will be deployed on all workers (global mode) so clients can connect to each of them (e.g. load balancing, CDN, edge proxy, …)</p></li>
+<li><p>There is a shared folder mounted on managers and workers (e.g. NFS, GlusterFS, CephFS, …)</p></li>
+</ul>
+<p>Let’s start by creating the network to allow communications between our services :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker network create -d overlay mynet
+</pre></div>
+</div>
+<p>We can now create the <em>autoconf</em> service that will listen to swarm events :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker service create --name autoconf <span class="se">\</span>
+                      --network mynet <span class="se">\</span>
+                      --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>/var/run/docker.sock,destination<span class="o">=</span>/var/run/docker.sock,ro <span class="se">\</span>
+                      --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>/shared/confs,destination<span class="o">=</span>/etc/nginx <span class="se">\</span>
+                      --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>/shared/letsencrypt,destination<span class="o">=</span>/etc/letsencrypt <span class="se">\</span>
+                      --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>/shared/acme-challenge,destination<span class="o">=</span>/acme-challenge <span class="se">\</span>
+                      -e <span class="nv">SWARM_MODE</span><span class="o">=</span>yes <span class="se">\</span>
+                      -e <span class="nv">API_URI</span><span class="o">=</span>/ChangeMeToSomethingHardToGuess <span class="se">\</span>
+                      --replicas <span class="m">1</span> <span class="se">\</span>
+                      --constraint node.role<span class="o">==</span>manager <span class="se">\</span>
+                      bunkerity/bunkerized-nginx-autoconf
+</pre></div>
+</div>
+<p><strong>You need to change <code class="docutils literal notranslate"><span class="pre">API_URI</span></code> to something hard to guess since there is no other security mechanism to protect the API at the moment.</strong></p>
+<p>When <em>autoconf</em> is created, it’s time for the <em>bunkerized-nginx</em> service to be up :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker service create --name nginx <span class="se">\</span>
+                      --network mynet <span class="se">\</span>
+                      -p <span class="nv">published</span><span class="o">=</span><span class="m">80</span>,target<span class="o">=</span><span class="m">8080</span>,mode<span class="o">=</span>host <span class="se">\</span>
+                      -p <span class="nv">published</span><span class="o">=</span><span class="m">443</span>,target<span class="o">=</span><span class="m">8443</span>,mode<span class="o">=</span>host <span class="se">\</span>
+                      --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>/shared/confs,destination<span class="o">=</span>/etc/nginx <span class="se">\</span>
+                      --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>/shared/letsencrypt,destination<span class="o">=</span>/etc/letsencrypt,ro <span class="se">\</span>
+                      --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>/shared/acme-challenge,destination<span class="o">=</span>/acme-challenge,ro <span class="se">\</span>
+                      --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>/shared/www,destination<span class="o">=</span>/www,ro <span class="se">\</span>
+                      -e <span class="nv">SWARM_MODE</span><span class="o">=</span>yes <span class="se">\</span>
+                      -e <span class="nv">USE_API</span><span class="o">=</span>yes <span class="se">\</span>
+                      -e <span class="nv">API_URI</span><span class="o">=</span>/ChangeMeToSomethingHardToGuess <span class="se">\</span>
+                      -e <span class="nv">MULTISITE</span><span class="o">=</span>yes <span class="se">\</span>
+                      -e <span class="nv">SERVER_NAME</span><span class="o">=</span> <span class="se">\</span>
+                      -e <span class="nv">AUTO_LETS_ENCRYPT</span><span class="o">=</span>yes <span class="se">\</span>
+                      -e <span class="nv">REDIRECT_HTTP_TO_HTTPS</span><span class="o">=</span>yes <span class="se">\</span>
+                      -l bunkerized-nginx.AUTOCONF <span class="se">\</span>
+                      --mode global <span class="se">\</span>
+                      --constraint node.role<span class="o">==</span>worker <span class="se">\</span>
+                      bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">API_URI</span></code> value must be the same as the one specified for the <em>autoconf</em> service.</p>
+<p>We can now create a new service and use labels to dynamically configure bunkerized-nginx. Labels for automatic configuration are the same as environment variables but with the “bunkerized-nginx.” prefix.</p>
+<p>Here is a PHP example :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker service create --name myapp <span class="se">\</span>
+                      --network mynet <span class="se">\</span>
+                      --mount <span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>/shared/www/app.domain.com,destination<span class="o">=</span>/app <span class="se">\</span>
+                      -l bunkerized-nginx.SERVER_NAME<span class="o">=</span>app.domain.com <span class="se">\</span>
+                      -l bunkerized-nginx.REMOTE_PHP<span class="o">=</span>myapp <span class="se">\</span>
+                      -l bunkerized-nginx.REMOTE_PHP_PATH<span class="o">=</span>/app <span class="se">\</span>
+                      --constraint node.role<span class="o">==</span>worker <span class="se">\</span>
+                      php:fpm
+</pre></div>
+</div>
+<p>And a reverse proxy example :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker service create --name anotherapp <span class="se">\</span>
+                      --network mynet <span class="se">\</span>
+                      -l bunkerized-nginx.SERVER_NAME<span class="o">=</span>app2.domain.com <span class="se">\</span>
+                      -l bunkerized-nginx.USE_REVERSE_PROXY<span class="o">=</span>yes <span class="se">\</span>
+                      -l bunkerized-nginx.REVERSE_PROXY_URL<span class="o">=</span>/ <span class="se">\</span>
+                      -l bunkerized-nginx.REVERSE_PROXY_HOST<span class="o">=</span>http://anotherapp <span class="se">\</span>
+                      --constraint node.role<span class="o">==</span>worker <span class="se">\</span>
+                      tutum/hello-world
+</pre></div>
+</div>
+</div>
+<div class="section" id="web-ui">
+<h2>Web UI<a class="headerlink" href="#web-ui" title="Permalink to this headline">¶</a></h2>
+<p>A dedicated image, <em>bunkerized-nginx-ui</em>, lets you manage bunkerized-nginx instances and services configurations through a web user interface. This feature is still in beta, feel free to open a new issue if you find a bug and/or you have an idea to improve it.</p>
+<p>First we need a volume that will store the configurations and a network because bunkerized-nginx will be used as a reverse proxy for the web UI :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker volume create nginx_conf
+docker network create mynet
+</pre></div>
+</div>
+<p>Let’s create the bunkerized-nginx-ui container that will host the web UI behind bunkerized-nginx :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run --network mynet <span class="se">\</span>
+           --name myui <span class="se">\</span>
+           -v /var/run/docker.sock:/var/run/docker.sock:ro <span class="se">\</span>
+           -v nginx_conf:/etc/nginx <span class="se">\</span>
+           -e <span class="nv">ABSOLUTE_URI</span><span class="o">=</span>https://admin.domain.com/webui/ <span class="se">\</span>
+           bunkerity/bunkerized-nginx-ui
+</pre></div>
+</div>
+<p>You will need to edit the <code class="docutils literal notranslate"><span class="pre">ABSOLUTE_URI</span></code> environment variable to reflect your actual URI of the web UI.</p>
+<p>We can now setup the bunkerized-nginx instance with the <code class="docutils literal notranslate"><span class="pre">bunkerized-nginx.UI</span></code> label and a reverse proxy configuration for our web UI :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker network create mynet
+
+docker run -p <span class="m">80</span>:8080 <span class="se">\</span>
+           -p <span class="m">443</span>:8443 <span class="se">\</span>
+           --network mynet <span class="se">\</span>
+           -v nginx_conf:/etc/nginx <span class="se">\</span>
+           -v /where/are/web/files:/www:ro <span class="se">\</span>
+           -v /where/to/save/certificates:/etc/letsencrypt <span class="se">\</span>
+           -e <span class="nv">SERVER_NAME</span><span class="o">=</span>admin.domain.com <span class="se">\</span>
+           -e <span class="nv">MULTISITE</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">AUTO_LETS_ENCRYPT</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">REDIRECT_HTTP_TO_HTTPS</span><span class="o">=</span>yes <span class="se">\</span>
+           -e <span class="nv">DISABLE_DEFAULT_SERVER</span><span class="o">=</span>yes <span class="se">\</span>
+           -e admin.domain.com_USE_MODSECURITY<span class="o">=</span>no <span class="se">\</span>
+           -e admin.domain.com_SERVE_FILES<span class="o">=</span>no <span class="se">\</span>
+           -e admin.domain.com_USE_AUTH_BASIC<span class="o">=</span>yes <span class="se">\</span>
+           -e admin.domain.com_AUTH_BASIC_USER<span class="o">=</span>admin <span class="se">\</span>
+           -e admin.domain.com_AUTH_BASIC_PASSWORD<span class="o">=</span>password <span class="se">\</span>
+           -e admin.domain.com_USE_REVERSE_PROXY<span class="o">=</span>yes <span class="se">\</span>
+           -e admin.domain.com_REVERSE_PROXY_URL<span class="o">=</span>/webui/ <span class="se">\</span>
+           -e admin.domain.com_REVERSE_PROXY_HOST<span class="o">=</span>http://myui:5000/ <span class="se">\</span>
+           -l bunkerized-nginx.UI <span class="se">\</span>
+           bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">AUTH_BASIC</span></code> environment variables let you define a login/password that must be provided before accessing to the web UI. At the moment, there is no authentication mechanism integrated into bunkerized-nginx-ui so <strong>using auth basic with a strong password coupled with a “hard to guess” URI is strongly recommended</strong>.</p>
+<p>Web UI should now be accessible from https://admin.domain.com/webui/.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="security_tuning.html" class="btn btn-neutral float-right" title="Security tuning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, bunkerity.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Security tuning &mdash; bunkerized-nginx v1.2.6 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+    <link rel="canonical" href="https://bunkerized-nginx.readthedocs.io/en/dev/security_tuning.html" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Troubleshooting" href="troubleshooting.html" />
+    <link rel="prev" title="Quickstart guide" href="quickstart_guide.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> bunkerized-nginx
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart_guide.html">Quickstart guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Security tuning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#miscellaneous">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#https">HTTPS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#settings">Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#let-s-encrypt">Let’s Encrypt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-certificate-s">Custom certificate(s)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#self-signed-certificate">Self-signed certificate</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modsecurity">ModSecurity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bad-behaviors-detection">Bad behaviors detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#antibot-challenge">Antibot challenge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#external-blacklists">External blacklists</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dnsbl">DNSBL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#crowdsec">CrowdSec</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#user-agents">User-Agents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tor-exit-nodes">TOR exit nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#proxies">Proxies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#abusers">Abusers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#referrers">Referrers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#limiting">Limiting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#requests">Requests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#connections">Connections</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#country">Country</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#whitelisting">Whitelisting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#blacklisting">Blacklisting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#web-ui">Web UI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plugins">Plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#container-hardening">Container hardening</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#drop-capabilities">Drop capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#no-new-privileges">No new privileges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-only">Read-only</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#user-namespace-remap">User namespace remap</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="volumes.html">Volumes list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">List of environment variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bunkerized-nginx</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Security tuning</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/security_tuning.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="security-tuning">
+<h1>Security tuning<a class="headerlink" href="#security-tuning" title="Permalink to this headline">¶</a></h1>
+<p>bunkerized-nginx comes with a set of predefined security settings that you can (and you should) tune to meet your own use case.</p>
+<div class="section" id="miscellaneous">
+<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
+<p>Here is a list of miscellaneous environment variables related more or less to security :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MAX_CLIENT_SIZE=10m</span></code> : maximum size of client body</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ALLOWED_METHODS=GET|POST|HEAD</span></code> : list of HTTP methos that clients are allowed to use</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DISABLE_DEFAULT_SERVER=no</span></code> : enable/disable the default server (i.e. : should your server respond to unknown Host header ?)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SERVER_TOKENS=off</span></code> : enable/disable sending the version number of nginx</p></li>
+</ul>
+</div>
+<div class="section" id="https">
+<h2>HTTPS<a class="headerlink" href="#https" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="settings">
+<h3>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h3>
+<p>Here is a list of environment variables and the corresponding default value related to HTTPS :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LISTEN_HTTP=yes</span></code> : you can set it to <code class="docutils literal notranslate"><span class="pre">no</span></code> if you want to disable HTTP access</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">REDIRECT_HTTP_TO_HTTPS=no</span></code> : enable/disable HTTP to HTTPS redirection</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HTTPS_PROTOCOLS=TLSv1.2</span> <span class="pre">TLSv1.3</span></code> : list of TLS versions to use</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HTTP2=yes</span></code> : enable/disable HTTP2 when HTTPS is enabled</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COOKIE_AUTO_SECURE_FLAG=yes</span></code> : enable/disable adding Secure flag when HTTPS is enabled</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STRICT_TRANSPORT_SECURITY=max-age=31536000</span></code> : force users to visit the website in HTTPS (more info <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy">here</a>)</p></li>
+</ul>
+</div>
+<div class="section" id="let-s-encrypt">
+<h3>Let’s Encrypt<a class="headerlink" href="#let-s-encrypt" title="Permalink to this headline">¶</a></h3>
+<p>Using Let’s Encrypt with the <code class="docutils literal notranslate"><span class="pre">AUTO_LETS_ENCRYPT=yes</span></code> environment variable is the easiest way to add HTTPS supports to your web services if they are connected to internet and you have public DNS A record(s).</p>
+<p>You can also set the <code class="docutils literal notranslate"><span class="pre">EMAIL_LETS_ENCRYPT</span></code> environment variable if you want to receive notifications from Let’s Encrypt (e.g. : expiration).</p>
+</div>
+<div class="section" id="custom-certificate-s">
+<h3>Custom certificate(s)<a class="headerlink" href="#custom-certificate-s" title="Permalink to this headline">¶</a></h3>
+<p>If you have security constraints (e.g : local network, custom PKI, …) you can use custom certificates of your choice and tell bunkerized-nginx to use them with the following environment variables :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">USE_CUSTOM_HTTPS=yes</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CUSTOM_HTTPS_CERT=/path/inside/container/to/cert.pem</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CUSTOM_HTTPS_KEY=/path/inside/container/to/key.pem</span></code></p></li>
+</ul>
+<p>Here is a an example on how to use custom certificates :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ ls /etc/ssl/my-web-app
+cert.pem key.pem
+
+$ docker run -p <span class="m">80</span>:8080 <span class="se">\</span>
+             -p <span class="m">443</span>:8443 <span class="se">\</span>
+             -v /etc/ssl/my-web-app:/certs:ro <span class="se">\</span>
+             -e <span class="nv">USE_CUSTOM_HTTPS</span><span class="o">=</span>yes <span class="se">\</span>
+             -e <span class="nv">CUSTOM_HTTPS_CERT</span><span class="o">=</span>/certs/cert.pem <span class="se">\</span>
+             -e <span class="nv">CUSTOM_HTTPS_KEY</span><span class="o">=</span>/certs/key.pem <span class="se">\</span>
+             ...
+             bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+<p>Please note that if you have one or more intermediate certificate(s) in your chain of trust, you will need to provide the bundle to <code class="docutils literal notranslate"><span class="pre">CUSTOM_HTTPS_CERT</span></code> (more info <a class="reference external" href="https://nginx.org/en/docs/http/configuring_https_servers.html#chains">here</a>).</p>
+<p>You can reload the certificate(s) (e.g. : in case of a renewal) by sending the SIGHUP/HUP signal to the container bunkerized-nginx will catch the signal and send a reload order to nginx :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker <span class="nb">kill</span> --signal<span class="o">=</span>SIGHUP my-container
+</pre></div>
+</div>
+</div>
+<div class="section" id="self-signed-certificate">
+<h3>Self-signed certificate<a class="headerlink" href="#self-signed-certificate" title="Permalink to this headline">¶</a></h3>
+<p>This method is not recommended in production but can be used to quickly deploy HTTPS for testing purposes. Just use the <code class="docutils literal notranslate"><span class="pre">GENERATE_SELF_SIGNED_SSL=yes</span></code> environment variable and bunkerized-nginx will generate a self-signed certificate for you :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ docker run -p <span class="m">80</span>:8080 <span class="se">\</span>
+             -p <span class="m">443</span>:8443 <span class="se">\</span>
+             -e <span class="nv">GENERATE_SELF_SIGNED_SSL</span><span class="o">=</span>yes <span class="se">\</span>
+             ...
+             bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="headers">
+<h2>Headers<a class="headerlink" href="#headers" title="Permalink to this headline">¶</a></h2>
+<p>Some important HTTP headers related to client security are sent with a default value. Sometimes it can break a web application or can be tuned to provide even more security. The complete list is available <a class="reference external" href="https://bunkerized-nginx.readthedocs.io/en/latest/environment_variables.html#security-headers">here</a>.</p>
+<p>You can also remove headers (e.g. : too verbose ones) by using the <code class="docutils literal notranslate"><span class="pre">REMOVE_HEADERS</span></code> environment variable which takes a list of header name separated with space (default value = <code class="docutils literal notranslate"><span class="pre">Server</span> <span class="pre">X-Powered-By</span> <span class="pre">X-AspNet-Version</span> <span class="pre">X-AspNetMvc-Version</span></code>).</p>
+</div>
+<div class="section" id="modsecurity">
+<h2>ModSecurity<a class="headerlink" href="#modsecurity" title="Permalink to this headline">¶</a></h2>
+<p>ModSecurity is integrated and enabled by default alongside the OWASP Core Rule Set within bunkerized-nginx. To change this behaviour you can use the <code class="docutils literal notranslate"><span class="pre">USE_MODSECURITY=no</span></code> or <code class="docutils literal notranslate"><span class="pre">USE_MODSECURITY_CRS=no</span></code> environment variables.</p>
+<p>We strongly recommend to keep both ModSecurity and the OWASP Core Rule Set enabled. The only downsides are the false positives that may occur. But they can be fixed easily and the CRS team maintains a list of exclusions for common application (e.g : wordpress, nextcloud, drupal, cpanel, …).</p>
+<p>Tuning the CRS with bunkerized-nginx is pretty simple : you can add configuration before (i.e. : exclusions) and after (i.e. : exceptions/tuning) the rules are loaded. You just need to mount your .conf files into the /modsec-crs-confs (before CRS is loaded) and /modsec-confs (after CRS is loaded).</p>
+<p>Here is an example to illustrate it :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ cat /data/exclusions-crs/wordpress.conf
+SecAction <span class="se">\</span>
+ <span class="s2">&quot;id:900130,\</span>
+<span class="s2">  phase:1,\</span>
+<span class="s2">  nolog,\</span>
+<span class="s2">  pass,\</span>
+<span class="s2">  t:none,\</span>
+<span class="s2">  setvar:tx.crs_exclusions_wordpress=1&quot;</span>
+
+$ cat /data/tuning-crs/remove-false-positives.conf
+SecRule REQUEST_FILENAME <span class="s2">&quot;/wp-admin/admin-ajax.php&quot;</span> <span class="s2">&quot;id:1,ctl:ruleRemoveByTag=attack-xss,ctl:ruleRemoveByTag=attack-rce&quot;</span>
+SecRule REQUEST_FILENAME <span class="s2">&quot;/wp-admin/options.php&quot;</span> <span class="s2">&quot;id:2,ctl:ruleRemoveByTag=attack-xss&quot;</span>
+SecRule REQUEST_FILENAME <span class="s2">&quot;^/wp-json/yoast&quot;</span> <span class="s2">&quot;id:3,ctl:ruleRemoveById=930120&quot;</span>
+
+$ docker run -p <span class="m">80</span>:8080 <span class="se">\</span>
+             -p <span class="m">443</span>:8443 <span class="se">\</span>
+             -v /data/exclusions-crs:/modsec-crs-confs:ro <span class="se">\</span>
+             -v /data/tuning-crs:/modsec-confs:ro <span class="se">\</span>
+             ...
+             bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+</div>
+<div class="section" id="bad-behaviors-detection">
+<h2>Bad behaviors detection<a class="headerlink" href="#bad-behaviors-detection" title="Permalink to this headline">¶</a></h2>
+<p>When attackers search for and/or exploit vulnerabilities they might generate some suspicious HTTP status codes that a “regular” user won’t generate within a period of time. If we detect that kind of behavior we can ban the offending IP address and force the attacker to come with a new one.</p>
+<p>That kind of security measure is implemented and enabled by default in bunkerized-nginx. Here is the list of the related environment variables and their default value :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">USE_BAD_BEHAVIOR=yes</span></code> : enable/disable “bad behavior” detection and automatic ban of IP</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BAD_BEHAVIOR_STATUS_CODES=400</span> <span class="pre">401</span> <span class="pre">403</span> <span class="pre">404</span> <span class="pre">405</span> <span class="pre">429</span> <span class="pre">444</span></code> : the list of HTTP status codes considered as “suspicious”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BAD_BEHAVIOR_THRESHOLD=10</span></code> : the number of “suspicious” HTTP status codes required before we ban the corresponding IP address</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BAD_BEHAVIOR_BAN_TIME=86400</span></code> : the duration time (in seconds) of the ban</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BAD_BEHAVIOR_COUNT_TIME=60</span></code> : the duration time (in seconds) to wait before resetting the counter of “suspicious” HTTP status codes for a given IP</p></li>
+</ul>
+</div>
+<div class="section" id="antibot-challenge">
+<h2>Antibot challenge<a class="headerlink" href="#antibot-challenge" title="Permalink to this headline">¶</a></h2>
+<p>Attackers will certainly use automated tools to exploit/find some vulnerabilities on your web service. One countermeasure is to challenge the users to detect if it looks like a bot. It might be effective against script kiddies or “lazy” attackers.</p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">USE_ANTIBOT</span></code> environment variable to add that kind of checks whenever a new client is connecting. The available challenges are : <code class="docutils literal notranslate"><span class="pre">cookie</span></code>, <code class="docutils literal notranslate"><span class="pre">javascript</span></code>, <code class="docutils literal notranslate"><span class="pre">captcha</span></code> and <code class="docutils literal notranslate"><span class="pre">recaptcha</span></code>. More info <a class="reference external" href="https://bunkerized-nginx.readthedocs.io/en/latest/environment_variables.html#antibot">here</a>.</p>
+</div>
+<div class="section" id="external-blacklists">
+<h2>External blacklists<a class="headerlink" href="#external-blacklists" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dnsbl">
+<h3>DNSBL<a class="headerlink" href="#dnsbl" title="Permalink to this headline">¶</a></h3>
+<p>Automatic checks on external DNS BlackLists are enabled by default with the <code class="docutils literal notranslate"><span class="pre">USE_DNSBL=yes</span></code> environment variable. The list of DNSBL zones is also configurable, you just need to edit the <code class="docutils literal notranslate"><span class="pre">DNSBL_LIST</span></code> environment variable which contains the following value by default <code class="docutils literal notranslate"><span class="pre">bl.blocklist.de</span> <span class="pre">problems.dnsbl.sorbs.net</span> <span class="pre">sbl.spamhaus.org</span> <span class="pre">xbl.spamhaus.org</span></code>.</p>
+</div>
+<div class="section" id="crowdsec">
+<h3>CrowdSec<a class="headerlink" href="#crowdsec" title="Permalink to this headline">¶</a></h3>
+<p>CrowdSec is not enabled by default because it’s more than an external blacklists and needs some extra work to get it working. But bunkerized-nginx is fully working with CrowdSec, here are the related environment variables :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">USE_CROWDSEC=no</span></code> : enable/disable CrowdSec checks before we authorize a client</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CROWDSEC_HOST=</span></code> : full URL to your CrowdSec instance API</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CROWDSEC_KEY=</span></code> : bouncer key given from <strong>cscli bouncer add MyBouncer</strong></p></li>
+</ul>
+<p>You will also need to share the logs generated by bunkerized-nginx with your CrowdSec instance. One approach is to send the logs to a syslog server which is writing the logs to the file system and then CrowdSec can easily read the logs. If you want to give it a try, you have a concrete example on how to use CrowdSec with bunkerized-nginx <a class="reference external" href="https://github.com/bunkerity/bunkerized-nginx/tree/master/examples/crowdsec">here</a>.</p>
+</div>
+<div class="section" id="user-agents">
+<h3>User-Agents<a class="headerlink" href="#user-agents" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes script kiddies or lazy attackers don’t put a “legitimate” value inside the <strong>User-Agent</strong> HTTP header so we can block them. This is controlled with the <code class="docutils literal notranslate"><span class="pre">BLOCK_USER_AGENT=yes</span></code> environment variable. The blacklist is composed of two files from <a class="reference external" href="https://raw.githubusercontent.com/mitchellkrogza/nginx-ultimate-bad-bot-blocker/master/_generator_lists/bad-user-agents.list">here</a> and <a class="reference external" href="https://raw.githubusercontent.com/JayBizzle/Crawler-Detect/master/raw/Crawlers.txt">here</a>.</p>
+<p>If a legitimate User-Agent is blacklisted, you can use the <code class="docutils literal notranslate"><span class="pre">WHITELIST_USER_AGENT</span></code> while still keeping the <code class="docutils literal notranslate"><span class="pre">BLOCK_USER_AGENT=yes</span></code> (more info <a class="reference external" href="https://bunkerized-nginx.readthedocs.io/en/latest/environment_variables.html#custom-whitelisting">here</a>).</p>
+</div>
+<div class="section" id="tor-exit-nodes">
+<h3>TOR exit nodes<a class="headerlink" href="#tor-exit-nodes" title="Permalink to this headline">¶</a></h3>
+<p>Blocking TOR exit nodes might not be a good decision depending on your use case. We decided to enable it by default with the <code class="docutils literal notranslate"><span class="pre">BLOCK_TOR_EXIT_NODE=yes</span></code> environment variable. If privacy is a concern for you and/or your clients, you can override the default value (i.e : <code class="docutils literal notranslate"><span class="pre">BLOCK_TOR_EXIT_NODE=no</span></code>).</p>
+<p>Please note that you have a concrete example on how to use bunkerized-nginx with a .onion hidden service <a class="reference external" href="https://github.com/bunkerity/bunkerized-nginx/tree/master/examples/tor-hidden-service">here</a>.</p>
+</div>
+<div class="section" id="proxies">
+<h3>Proxies<a class="headerlink" href="#proxies" title="Permalink to this headline">¶</a></h3>
+<p>This list contains IP addresses and networks known to be open proxies (downloaded from <a class="reference external" href="https://iplists.firehol.org/files/firehol_proxies.netset">here</a>). Unless privacy is important for you and/or your clients, you should keep the default environment variable <code class="docutils literal notranslate"><span class="pre">BLOCK_PROXIES=yes</span></code>.</p>
+</div>
+<div class="section" id="abusers">
+<h3>Abusers<a class="headerlink" href="#abusers" title="Permalink to this headline">¶</a></h3>
+<p>This list contains IP addresses and networks known to be abusing (downloaded from <a class="reference external" href="https://iplists.firehol.org/files/firehol_abusers_30d.netset">here</a>). You can control this feature with the <code class="docutils literal notranslate"><span class="pre">BLOCK_ABUSERS</span></code> environment variable (default : <code class="docutils literal notranslate"><span class="pre">yes</span></code>).</p>
+</div>
+<div class="section" id="referrers">
+<h3>Referrers<a class="headerlink" href="#referrers" title="Permalink to this headline">¶</a></h3>
+<p>This list contains bad referrers domains known for spamming (downloaded from <a class="reference external" href="https://raw.githubusercontent.com/mitchellkrogza/nginx-ultimate-bad-bot-blocker/master/_generator_lists/bad-referrers.list">here</a>). If one value is found inside the <strong>Referer</strong> HTTP header, request will be blocked. You can control this feature with the <code class="docutils literal notranslate"><span class="pre">BLOCK_REFERRER</span></code> environment variable (default = <code class="docutils literal notranslate"><span class="pre">yes</span></code>).</p>
+</div>
+</div>
+<div class="section" id="limiting">
+<h2>Limiting<a class="headerlink" href="#limiting" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="requests">
+<h3>Requests<a class="headerlink" href="#requests" title="Permalink to this headline">¶</a></h3>
+<p>To limit bruteforce attacks we decided to use the <a class="reference external" href="https://www.nginx.com/blog/rate-limiting-nginx/">rate limiting feature in nginx</a> so attackers will be limited to X request(s)/s for the same resource. That kind of protection might be useful against other attacks too (e.g. : blind SQL injection).</p>
+<p>Here is the list of related environment variables and their default value :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">USE_LIMIT_REQ=yes</span></code> : enable/disable request limiting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LIMIT_REQ_RATE=1r/s</span></code> : the rate to apply for the same resource</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LIMIT_REQ_BURST=2</span></code> : the number of request tu put in a queue before effectively rejecting requests</p></li>
+</ul>
+</div>
+<div class="section" id="connections">
+<h3>Connections<a class="headerlink" href="#connections" title="Permalink to this headline">¶</a></h3>
+<p>Opening too many connections from the same IP address might be considered as suspicious (unless it’s a shared IP and everyone is sending requests to your web service). It can be a dos/ddos attempt too. Bunkerized-nginx levarages the <a class="reference external" href="http://nginx.org/en/docs/http/ngx_http_limit_conn_module.html">ngx_http_conn_module</a> from nginx to prevent users opening too many connections.</p>
+<p>Here is the list of related environment variables and their default value :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">USE_LIMIT_CONN=yes</span></code> : enable disable connection limiting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LIMIT_CONN_MAX=50</span></code> : maximum number of connections per IP</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="country">
+<h2>Country<a class="headerlink" href="#country" title="Permalink to this headline">¶</a></h2>
+<p>If the location of your clients is known, you may want to add another security layer by whitelisting or blacklisting some countries. You can use the <code class="docutils literal notranslate"><span class="pre">BLACKLIST_COUNTRY</span></code> or <code class="docutils literal notranslate"><span class="pre">WHITELIST_COUNTRY</span></code> environment variables depending on your approach. They both take a list of 2 letters country code separated with space.</p>
+</div>
+<div class="section" id="authentication">
+<h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h2>
+<p>You can quickly protect sensitive resources (e.g. : admin panels) by requiring HTTP authentication. Here is the list of related environment variables and their default value :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">USE_AUTH_BASIC=no</span></code> : enable/disable auth basic</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AUTH_BASIC_LOCATION=sitewide</span></code> : location of the sensitive resource (e.g. <code class="docutils literal notranslate"><span class="pre">/admin</span></code>) or <code class="docutils literal notranslate"><span class="pre">sitewide</span></code> to force authentication on the whole service</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AUTH_BASIC_USER=changeme</span></code> : the username required</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AUTH_BASIC_PASSWORD=changeme</span></code> : the password required</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AUTH_BASIC_TEXT=Restricted</span> <span class="pre">area</span></code> : the text that will be displayed to the user</p></li>
+</ul>
+</div>
+<div class="section" id="whitelisting">
+<h2>Whitelisting<a class="headerlink" href="#whitelisting" title="Permalink to this headline">¶</a></h2>
+<p>Adding extra security can sometimes trigger false positives. Also, it might be not useful to do the security checks for specific clients because we decided to trust them. Bunkerized-nginx supports two types of whitelist : by IP address and by reverse DNS.</p>
+<p>Here is the list of related environment variables and their default value :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">USE_WHITELIST_IP=yes</span></code> : enable/disable whitelisting by IP address</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WHITELIST_IP_LIST=23.21.227.69</span> <span class="pre">40.88.21.235</span> <span class="pre">50.16.241.113</span> <span class="pre">50.16.241.114</span> <span class="pre">50.16.241.117</span> <span class="pre">50.16.247.234</span> <span class="pre">52.204.97.54</span> <span class="pre">52.5.190.19</span> <span class="pre">54.197.234.188</span> <span class="pre">54.208.100.253</span> <span class="pre">54.208.102.37</span> <span class="pre">107.21.1.8</span></code> : list of IP addresses and/or network CIDR blocks to whitelist (default contains the IP addresses of the <a class="reference external" href="https://help.duckduckgo.com/duckduckgo-help-pages/results/duckduckbot/">DuckDuckGo crawler</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">USE_WHITELIST_REVERSE=yes</span></code> : enable/disable whitelisting by reverse DNS</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WHITELIST_REVERSE_LIST=.googlebot.com</span> <span class="pre">.google.com</span> <span class="pre">.search.msn.com</span> <span class="pre">.crawl.yahoot.net</span> <span class="pre">.crawl.baidu.jp</span> <span class="pre">.crawl.baidu.com</span> <span class="pre">.yandex.com</span> <span class="pre">.yandex.ru</span> <span class="pre">.yandex.net</span></code> : the list of reverse DNS suffixes to trust (default contains the list of major search engines crawlers)</p></li>
+</ul>
+</div>
+<div class="section" id="blacklisting">
+<h2>Blacklisting<a class="headerlink" href="#blacklisting" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes it isn’t necessary to spend some resources for a particular client because we know for sure that he is malicious. Bunkerized-nginx nginx supports two types of blacklisting : by IP address and by reverse DNS.</p>
+<p>Here is the list of related environment variables and their default value :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">USE_BLACKLIST_IP=yes</span></code> : enable/disable blacklisting by IP address</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BLACKLIST_IP_LIST=</span></code> : list of IP addresses and/or network CIDR blocks to blacklist</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">USE_BLACKLIST_REVERSE=yes</span></code> : enable/disable blacklisting by reverse DNS</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BLACKLIST_REVERSE_LIST=.shodan.io</span></code> : the list of reverse DNS suffixes to never trust</p></li>
+</ul>
+</div>
+<div class="section" id="web-ui">
+<h2>Web UI<a class="headerlink" href="#web-ui" title="Permalink to this headline">¶</a></h2>
+<p>Mounting the docker socket in a container which is facing the network, like we do with the <a class="reference external" href="https://bunkerized-nginx.readthedocs.io/en/latest/quickstart_guide.html#web-ui">web UI</a>, is not a good security practice. In case of a vulnerability inside the application, attackers can freely use the Docker socket and the whole host can be compromised.</p>
+<p>A possible workaround is to use the <a class="reference external" href="https://github.com/Tecnativa/docker-socket-proxy">tecnativa/docker-socket-proxy</a> image which acts as a reverse proxy between the application and the Docker socket. It can allow/deny the requests made to the Docker API.</p>
+<p>Before starting the web UI, you need to fire up the docker-socket-proxy (we also need a network because of inter-container communication) :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker network create mynet
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run --name mysocketproxy <span class="se">\</span>
+           --network mynet <span class="se">\</span>
+           -v /var/run/docker.sock:/var/run/docker.sock:ro <span class="se">\</span>
+           -e <span class="nv">POST</span><span class="o">=</span><span class="m">1</span> <span class="se">\</span>
+           -e <span class="nv">CONTAINERS</span><span class="o">=</span><span class="m">1</span> <span class="se">\</span>
+           tecnativa/docker-socket-proxy
+</pre></div>
+</div>
+<p>You can now start the web UI container and use the <code class="docutils literal notranslate"><span class="pre">DOCKER_HOST</span></code> environment variable to define the Docker API endpoint :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run --network mynet <span class="se">\</span>
+           -v autoconf:/etc/nginx <span class="se">\</span>
+           -e <span class="nv">ABSOLUTE_URI</span><span class="o">=</span>https://my.webapp.com/admin/ <span class="se">\</span>
+           -e <span class="nv">DOCKER_HOST</span><span class="o">=</span>tcp://mysocketproxy:2375 <span class="se">\</span>
+           bunkerity/bunkerized-nginx-ui
+</pre></div>
+</div>
+</div>
+<div class="section" id="plugins">
+<h2>Plugins<a class="headerlink" href="#plugins" title="Permalink to this headline">¶</a></h2>
+<p>Some security features can be added through the plugins system (e.g. : ClamAV). You will find more info in the <a class="reference external" href="https://bunkerized-nginx.readthedocs.io/en/latest/plugins.html">plugins section</a>.</p>
+</div>
+<div class="section" id="container-hardening">
+<h2>Container hardening<a class="headerlink" href="#container-hardening" title="Permalink to this headline">¶</a></h2>
+<p>You will find a ready to use docker-compose.yml file focused on container hardening <a class="reference external" href="https://github.com/bunkerity/bunkerized-nginx/tree/master/examples/hardened">here</a>.</p>
+<div class="section" id="drop-capabilities">
+<h3>Drop capabilities<a class="headerlink" href="#drop-capabilities" title="Permalink to this headline">¶</a></h3>
+<p>By default, <em>bunkerized-nginx</em> runs as non-root user inside the container and should not use any of the default <a class="reference external" href="https://docs.docker.com/engine/security/#linux-kernel-capabilities">capabilities</a> allowed by Docker. You can safely remove all capabilities to harden the container :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run ... --drop-cap<span class="o">=</span>all ... bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+</div>
+<div class="section" id="no-new-privileges">
+<h3>No new privileges<a class="headerlink" href="#no-new-privileges" title="Permalink to this headline">¶</a></h3>
+<p>Bunkerized-nginx should never tries to gain additional privileges through setuid/setgid executables. You can safely add the <strong>no-new-privileges</strong> <a class="reference external" href="https://docs.docker.com/engine/reference/run/#security-configuration">security configuration</a> when creating the container :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run ... --security-opt no-new-privileges ... bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+</div>
+<div class="section" id="read-only">
+<h3>Read-only<a class="headerlink" href="#read-only" title="Permalink to this headline">¶</a></h3>
+<p>Since the locations where bunkerized-nginx needs to write are known, we can run the container with a read-only root file system and only allow writes to specific locations by adding volumes and a tmpfs mount :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run ... --read-only --tmpfs /tmp -v cache-vol:/cache -v conf-vol:/etc/nginx -v /path/to/web/files:/www:ro -v /where/to/store/certificates:/etc/letsencrypt bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+</div>
+<div class="section" id="user-namespace-remap">
+<h3>User namespace remap<a class="headerlink" href="#user-namespace-remap" title="Permalink to this headline">¶</a></h3>
+<p>Another hardening trick is <a class="reference external" href="https://docs.docker.com/engine/security/userns-remap/">user namespace remapping</a> : it allows you to map the UID/GID of users inside a container to another UID/GID on the host. For example, you can map the user nginx with UID/GID 101 inside the container to a non-existent user with UID/GID 100101 on the host.</p>
+<p>Let’s assume you have the /etc/subuid and /etc/subgid files like this :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user</span><span class="p">:</span><span class="mi">100000</span><span class="p">:</span><span class="mi">65536</span>
+</pre></div>
+</div>
+<p>It means that everything done inside the container will be remapped to UID/GID 100101 (100000 + 101) on the host.</p>
+<p>Please note that you must set the rights on the volumes (e.g. : /etc/letsencrypt, /www, …) according to the remapped UID/GID :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ chown root:100101 /path/to/letsencrypt
+$ chmod <span class="m">770</span> /path/to/letsencrypt
+$ docker run ... -v /path/to/letsencrypt:/etc/letsencrypt ... bunkerity/bunkerized-nginx
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="quickstart_guide.html" class="btn btn-neutral float-left" title="Quickstart guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, bunkerity.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

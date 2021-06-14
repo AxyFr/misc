@@ -1,0 +1,324 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Plugins &mdash; bunkerized-nginx v1.2.6 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+    <link rel="canonical" href="https://bunkerized-nginx.readthedocs.io/en/dev/plugins.html" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="List of environment variables" href="environment_variables.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> bunkerized-nginx
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart_guide.html">Quickstart guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security_tuning.html">Security tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="volumes.html">Volumes list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">List of environment variables</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#official-plugins">Official plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#community-plugins">Community plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-a-plugin">Use a plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#write-a-plugin">Write a plugin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#plugin-json">plugin.json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main-code">Main code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bunkerized-nginx</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Plugins</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/plugins.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="plugins">
+<h1>Plugins<a class="headerlink" href="#plugins" title="Permalink to this headline">¶</a></h1>
+<p>Bunkerized-nginx comes with a plugin system that lets you extend the core with extra security features. To add a plugin you will need to download it, edit its settings and mount it to the <code class="docutils literal notranslate"><span class="pre">/plugins</span></code> volume.</p>
+<div class="section" id="official-plugins">
+<h2>Official plugins<a class="headerlink" href="#official-plugins" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/bunkerity/bunkerized-nginx-clamav">ClamAV</a> : automatically scan uploaded files and deny access if a virus is detected</p></li>
+</ul>
+</div>
+<div class="section" id="community-plugins">
+<h2>Community plugins<a class="headerlink" href="#community-plugins" title="Permalink to this headline">¶</a></h2>
+<p>If you have made a plugin and want it to be listed here, feel free to <a class="reference external" href="https://github.com/bunkerity/bunkerized-nginx/pulls">create a pull request</a> and edit that section.</p>
+</div>
+<div class="section" id="use-a-plugin">
+<h2>Use a plugin<a class="headerlink" href="#use-a-plugin" title="Permalink to this headline">¶</a></h2>
+<p>The generic way of using a plugin consists of :</p>
+<ul class="simple">
+<li><p>Download it to a folder (e.g. : myplugin/)</p></li>
+<li><p>Edit the settings inside the plugin.json files (e.g. : myplugin/plugin.json)</p></li>
+<li><p>Mount the plugin folder to the /plugins/plugin-id inside the container (e.g. : /where/is/myplugin:/plugins/myplugin)</p></li>
+</ul>
+<p>To check if the plugin is loaded you should see log entries like that :</p>
+<div class="highlight-log notranslate"><div class="highlight"><pre><span></span>2021/06/05 09:19:47 [error] 104#104: [PLUGINS] *NOT AN ERROR* plugin MyPlugin/1.0 has been loaded
+</pre></div>
+</div>
+</div>
+<div class="section" id="write-a-plugin">
+<h2>Write a plugin<a class="headerlink" href="#write-a-plugin" title="Permalink to this headline">¶</a></h2>
+<p>A plugin is composed of a plugin.json which contains metadata (e.g. : name, settings, …) and a set of LUA files for the plugin code.</p>
+<div class="section" id="plugin-json">
+<h3>plugin.json<a class="headerlink" href="#plugin-json" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+	<span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;myplugin&quot;</span><span class="p">,</span>
+	<span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;My Plugin&quot;</span><span class="p">,</span>
+	<span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Short description of my plugin.&quot;</span><span class="p">,</span>
+	<span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+	<span class="nt">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{</span>
+		<span class="nt">&quot;MY_SETTING&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span><span class="p">,</span>
+		<span class="nt">&quot;ANOTHER_SETTING&quot;</span><span class="p">:</span> <span class="s2">&quot;value2&quot;</span><span class="p">,</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">id</span></code> value is really important because it must match the subfolder name inside the <code class="docutils literal notranslate"><span class="pre">plugins</span></code> volume. Choose one which isn’t already used to avoid conflicts.</p>
+<p>Settings names and default values can be choosen freely. There will be no conflict when you retrieve them because they will be prefixed with your plugin id (e.g. : <code class="docutils literal notranslate"><span class="pre">myplugin_MY_SETTING</span></code>).</p>
+</div>
+<div class="section" id="main-code">
+<h3>Main code<a class="headerlink" href="#main-code" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">M</span>		<span class="o">=</span> <span class="p">{}</span>
+<span class="kd">local</span> <span class="n">logger</span>	<span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;logger&quot;</span>
+
+<span class="c1">-- this function will be called for each request</span>
+<span class="c1">-- the name MUST be check without any argument</span>
+<span class="kr">function</span> <span class="nc">M</span><span class="p">.</span><span class="nf">check</span> <span class="p">()</span>
+
+	<span class="c1">-- the logger.log function lets you write into the logs</span>
+	<span class="n">logger</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">ngx</span><span class="p">.</span><span class="n">NOTICE</span><span class="p">,</span> <span class="s2">&quot;MyPlugin&quot;</span><span class="p">,</span> <span class="s2">&quot;check called&quot;</span><span class="p">)</span>
+
+	<span class="c1">-- here is how to retrieve a setting</span>
+	<span class="kd">local</span> <span class="n">my_setting</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">shared</span><span class="p">.</span><span class="n">plugins_data</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pluginid_MY_SETTING&quot;</span><span class="p">)</span>
+
+	<span class="c1">-- a dummy example to show how to block a request</span>
+	<span class="kr">if</span> <span class="n">my_setting</span> <span class="o">==</span> <span class="s2">&quot;block&quot;</span> <span class="kr">then</span>
+		<span class="n">ngx</span><span class="p">.</span><span class="n">exit</span><span class="p">(</span><span class="n">ngx</span><span class="p">.</span><span class="n">HTTP_FORBIDDEN</span><span class="p">)</span>
+	<span class="kr">end</span>
+
+<span class="kr">end</span>
+
+<span class="kr">return</span> <span class="n">M</span>
+</pre></div>
+</div>
+<p>That file must have the same name as the <code class="docutils literal notranslate"><span class="pre">id</span></code> defined in the plugin.json with a .lua suffix (e.g. : <code class="docutils literal notranslate"><span class="pre">myplugin.lua</span></code>).</p>
+<p>Under the hood, bunkerized-nginx uses the <a class="reference external" href="https://github.com/openresty/lua-nginx-module">lua nginx module</a> therefore you should be able to access to the whole <strong>ngx.*</strong> functions.</p>
+</div>
+<div class="section" id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
+<p>Since the core already uses some external libraries you can use it in your own plugins too (see the <a class="reference external" href="https://github.com/bunkerity/bunkerized-nginx/blob/master/compile.sh">compile.sh</a> file and the <a class="reference external" href="https://github.com/bunkerity/bunkerized-nginx/tree/master/lua">core lua files</a>).</p>
+<p>In case you need to add dependencies, you can do it by placing the corresponding files into the same folder of your main plugin code. Here is an example with a file named <strong>dependency.lua</strong> :</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">M</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="kr">function</span> <span class="nc">M</span><span class="p">.</span><span class="nf">my_function</span> <span class="p">()</span>
+	<span class="kr">return</span> <span class="s2">&quot;42&quot;</span>
+<span class="kr">end</span>
+
+<span class="kr">return</span> <span class="n">M</span>
+</pre></div>
+</div>
+<p>To include it from you main code you will need to prefix it with your plugin id like that :</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="p">...</span>
+<span class="kd">local</span> <span class="n">my_dependency</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;pluginid.dependency&quot;</span>
+
+<span class="kr">function</span> <span class="nc">M</span><span class="p">.</span><span class="nf">check</span> <span class="p">()</span>
+	<span class="p">...</span>
+	<span class="kd">local</span> <span class="n">my_value</span> <span class="o">=</span> <span class="n">my_dependency</span><span class="p">.</span><span class="n">my_function</span><span class="p">()</span>
+	<span class="p">...</span>
+<span class="kr">end</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="environment_variables.html" class="btn btn-neutral float-left" title="List of environment variables" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, bunkerity.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
